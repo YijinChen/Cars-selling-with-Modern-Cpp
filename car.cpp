@@ -1,6 +1,7 @@
 #include "car.h"
 #include <ctime>
 #include <iostream>
+#include <stdexcept>
 
 Car::Car(){}
 Car::Car(int id, int price, std::string input_manu, CarColor input_color, CarType input_type){
@@ -14,16 +15,19 @@ Car::Car(int id, int price, std::string input_manu, CarColor input_color, CarTyp
 }
 
 void Car::SellCar(int &TotalSale){
-    isSold = true;
-    soldTime = std::time(nullptr);
-    TotalSale += salePrice;
+    if (isSold == true){
+        throw std::runtime_error(" This car has aready been sold.");}
+    else{
+        isSold = true;
+        soldTime = std::time(nullptr);
+        TotalSale += salePrice;}
 }
 
 void Car::UpdatePrice(int newPrice){
     if(isSold == false){
         salePrice = newPrice;}
     else{
-        cout << "Error in UpdatePrice: cannot update price for sold car" << endl;}    
+        throw std::runtime_error("Error in UpdatePrice: cannot update price for sold car");}    
 }
 
 BMW::BMW(){}
