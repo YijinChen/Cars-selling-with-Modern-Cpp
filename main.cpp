@@ -14,15 +14,18 @@ int main(int argc, char *argv[]){
     int TESLA_num = std::atoi(argv[3]);
 
     BMW *BMW_list = new BMW[BMW_num];
-    GenerateCars("BMW", BMW_list,BMW_num,40000,60000);
+    int BMWtype_list[] = {1, 2}; // The type numbers for BMW,  1 for HYBRID and 2 for GASOLINE
+    GenerateCars("BMW", BMW_list,BMW_num,40000,60000,BMWtype_list,2);
     SortCar(BMW_list,BMW_num);
 
     BENZ *BENZ_list = new BENZ[BENZ_num];
-    GenerateCars("BENZ", BENZ_list,BENZ_num,50000,80000);
+    int BENZtype_list[] = {0, 1, 2}; // The type numbers for BENZ, 0 for ELECTRIC, 1 for HYBRID, and 2 for GASOLINE
+    GenerateCars("BENZ", BENZ_list,BENZ_num,50000,80000,BENZtype_list,3);
     SortCar(BENZ_list,BENZ_num);
 
     TESLA *TESLA_list = new TESLA[TESLA_num];
-    GenerateCars("TESLA", TESLA_list,TESLA_num,30000,60000);
+    int TESLAtype_list[] = {0}; // The type numbers for TESLA, 0 for ELECTRIC
+    GenerateCars("TESLA", TESLA_list,TESLA_num,30000,60000,TESLAtype_list,1);
     SortCar(TESLA_list,TESLA_num);
 
     PrintInfo(BMW_list,BMW_num);

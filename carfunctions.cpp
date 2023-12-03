@@ -32,32 +32,22 @@ int Ran_Gen(int a, int b){
     return random_number;
 }
 template <typename T>
-void GenerateCars(std::string ManuName, T *arr, int size, int a, int b){
+void GenerateCars(std::string ManuName, T *arr, int size, int minPrice, int maxPrice, int *list, int list_size){
     for (int i = 0; i < size; i++)
     {
         int id = id_counter;
         id_counter++;
-        int salePrice = Ran_Gen(a,b);
+        int salePrice = Ran_Gen(minPrice,maxPrice);
         CarColor color = static_cast<CarColor>(Ran_Gen(0,NUM_COLORS - 1));
-        CarType type;
-        T item;
-        if (ManuName == "BMW"){
-            type = static_cast<CarType>(Ran_Gen(1,NUM_TYPES - 1));
-            item = T(id,salePrice,"BMW", color,type);}
-        else if (ManuName == "BENZ"){
-            type = static_cast<CarType>(Ran_Gen(0,NUM_TYPES - 1));
-            item = T(id,salePrice,"BENZ", color,type);}
-        else if (ManuName == "TESLA"){
-            type = ELECTRIC;
-            item = T(id,salePrice,"TESLA", color,type);}
-        else{
-            cout << "Production Error: Invalid Car Type" << endl;}
-    arr[i] = item;
+        int type_number = list[Ran_Gen(0,list_size - 1)];
+        CarType type = static_cast<CarType>(type_number);
+        T item = T(id,salePrice,ManuName,color,type);
+        arr[i] = item;
     }
 }
-template void GenerateCars<BMW>(std::string ManuName, BMW *arr, int size, int a, int b);
-template void GenerateCars<BENZ>(std::string ManuName, BENZ *arr, int size, int a, int b);
-template void GenerateCars<TESLA>(std::string ManuName, TESLA *arr, int size, int a, int b);
+template void GenerateCars<BMW>(std::string ManuName, BMW *arr, int size, int minPrice, int maxPrice, int *list, int list_size);
+template void GenerateCars<BENZ>(std::string ManuName, BENZ *arr, int size, int minPrice, int maxPrice, int *list, int list_size);
+template void GenerateCars<TESLA>(std::string ManuName, TESLA *arr, int size, int minPrice, int maxPrice, int *list, int list_size);
 
 template <typename T>
 void SortCar(T *arr, int size) {
