@@ -47,4 +47,5 @@ TESLA::TESLA(int id, int salePrice, std::string manu, CarColor color, CarType ty
     if(type != ELECTRIC){
         cout << "TESLA only produces cars with type ELECTRIC" << endl;
     }
+    isDiscount = false;
 }

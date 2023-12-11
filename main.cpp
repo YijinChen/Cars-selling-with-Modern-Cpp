@@ -1,38 +1,31 @@
 #include "car.h"
-#include"carfunctions.h"
+#include "carfunctions.h"
+#include "production.h"
+#include "interaction.h"
 #include <random>
 #include <iostream>
 #include <cstdlib>
+#include <atomic>
+#include <thread>
+#include <vector>
 using namespace std;
 
 
-int main(int argc, char *argv[]){   
-    (void)argc;
+int main(){   
+    std::thread worker1(ProduceCars);
+    std::thread worker2(setDiscount);
+    std::thread worker3(MainInterface);
+    cout << "Dear customer, welcome to the virtual car trade center!" << endl;
+    cout << " You can always enter 'stop' to quit the application and enter '/main' to return the main menu." << endl;
 
-    int BMW_num = std::atoi(argv[1]);
-    int BENZ_num = std::atoi(argv[2]);
-    int TESLA_num = std::atoi(argv[3]);
-
-    BMW *BMW_list = new BMW[BMW_num];
-    CarType BMWtype_list[] = {HYBRID, GASOLINE}; 
-    GenerateCars("BMW", BMW_list,BMW_num,40000,60000,BMWtype_list,2);
-    SortCar(BMW_list,BMW_num);
-
-    BENZ *BENZ_list = new BENZ[BENZ_num];
-    CarType BENZtype_list[] = {ELECTRIC, HYBRID, GASOLINE}; 
-    GenerateCars("BENZ", BENZ_list,BENZ_num,50000,80000,BENZtype_list,3);
-    SortCar(BENZ_list,BENZ_num);
-
-    TESLA *TESLA_list = new TESLA[TESLA_num];
-    CarType TESLAtype_list[] = {ELECTRIC}; // The type numbers for TESLA, 0 for ELECTRIC
-    GenerateCars("TESLA", TESLA_list,TESLA_num,30000,60000,TESLAtype_list,1);
-    SortCar(TESLA_list,TESLA_num);
-
-    PrintInfo(BMW_list,BMW_num);
-    PrintInfo(BENZ_list,BENZ_num);
-    PrintInfo(TESLA_list,TESLA_num);
-
-    delete[] BMW_list;
-    delete[] BENZ_list;
-    delete[] TESLA_list;
+    // std::string input;
+    // if (input == "stop") {
+    //     cin >> input;
+    // }
+    // stopFlag = true;
+    worker1.join();
+    worker2.join();
+    worker3.join();
+    cout << endl;
+    cout << "You have successfully quit the application." << endl;
 }
