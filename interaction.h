@@ -12,7 +12,9 @@ bool CheckTypeRepertory(std::vector<T> &Repertory, CarType type, std::vector<T> 
 void MainInterface();
 void CheckRepertory();
 void BuyInterface();
-void TypeSelect(std::string brand);
-void BudgetSelect(int brand);
+void TypeSelect();
+void BudgetSelect();
+size_t CheckInput(std::string UserInput);
+void NumberSelect();
 
 #endif

@@ -12,12 +12,12 @@ using namespace std;
 
 
 int main(){   
+    cout << "Dear customer, welcome to the virtual car trade center!" << endl;
+    cout << "You can always enter 'stop' to quit the application and enter '/main' to return the main menu." << endl;
     std::thread worker1(ProduceCars);
     std::thread worker2(setDiscount);
     std::thread worker3(MainInterface);
-    cout << "Dear customer, welcome to the virtual car trade center!" << endl;
-    cout << " You can always enter 'stop' to quit the application and enter '/main' to return the main menu." << endl;
-
+   
     // std::string input;
     // if (input == "stop") {
     //     cin >> input;

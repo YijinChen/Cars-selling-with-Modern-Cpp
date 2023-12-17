@@ -18,7 +18,9 @@ std::size_t TESLA_num = 3;
 std::vector<BMW> BMW_list;
 std::vector<BENZ> BENZ_list;
 std::vector<TESLA> TESLA_list;
-std::mutex mtx1; //for lock shared variables between different Threads
+std::mutex mtx1; // for lock shared variables "TESLA_list" between different Threads
+
+
 
 template <typename T>
 void AddRepertory(std::vector<T> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int TypeSize, int PriceType, int *PriceArr, int PriceSize){
