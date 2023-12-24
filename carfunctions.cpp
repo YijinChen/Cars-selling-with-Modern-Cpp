@@ -33,31 +33,31 @@ int Ran_Gen(int a, int b){
 }
 template <typename T>
 //PriceType, PriceArr, PriceSize
-void GenerateCars(std::string ManuName, std::vector<T> &arr, int pType, int *pArr, int pSize, CarType *list, int list_size){
+void GenerateCars(std::string ManuName, std::vector<T> &arr, int PriceType, int *PriceArr, int PriceArrSize, CarType *TypeList, int TypeListSize){
     for (size_t i = 0; i < arr.size(); i++)
     {
         int id = id_counter;
         id_counter++;
         int salePrice = 0;
-        if(pType == 0){
-            salePrice = Ran_Gen(pArr[0], pArr[1]);
+        if(PriceType == 0){
+            salePrice = Ran_Gen(PriceArr[0], PriceArr[1]);
         }
-        else if(pType == 1){
-            salePrice = pArr[Ran_Gen(0,pSize - 1)];
+        else if(PriceType == 1){
+            salePrice = PriceArr[Ran_Gen(0,PriceArrSize - 1)];
         }
         else{
             std::cout << "Ilegal price type." << endl;
         }
         
         CarColor color = static_cast<CarColor>(Ran_Gen(0,NUM_COLORS - 1));
-        CarType type = list[Ran_Gen(0,list_size - 1)];
+        CarType type = TypeList[Ran_Gen(0,TypeListSize - 1)];
         T item = T(id,salePrice,ManuName,color,type);
         arr[i] = item;
     }
 }
-template void GenerateCars<BMW>(std::string ManuName, std::vector<BMW> &arr, int pType, int *pArr, int pSize, CarType *list, int list_size);
-template void GenerateCars<BENZ>(std::string ManuName, std::vector<BENZ> &arr, int pType, int *pArr, int pSize, CarType *list, int list_size);
-template void GenerateCars<TESLA>(std::string ManuName, std::vector<TESLA> &arr, int pType, int *pArr, int pSize, CarType *list, int list_size);
+template void GenerateCars<BMW>(std::string ManuName, std::vector<BMW> &arr, int PriceType, int *PriceArr, int PriceArrSize, CarType *TypeList, int TypeListSize);
+template void GenerateCars<BENZ>(std::string ManuName, std::vector<BENZ> &arr, int PriceType, int *PriceArr, int PriceArrSize, CarType *TypeList, int TypeListSize);
+template void GenerateCars<TESLA>(std::string ManuName, std::vector<TESLA> &arr, int PriceType, int *PriceArr, int PriceArrSize, CarType *TypeList, int TypeListSize);
 
 template <typename T>
 void SortCar(std::vector<T> &arr) {

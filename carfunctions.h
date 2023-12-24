@@ -7,7 +7,7 @@ std::string TypeToString(CarType t);
 std::string ColorToString(CarColor c);
 int Ran_Gen(int a, int b);
 template <typename T>
-void GenerateCars(std::string ManuName, std::vector<T> &arr, int pType, int *pArr, int pSize, CarType *list, int list_size);
+void GenerateCars(std::string ManuName, std::vector<T> &arr, int PriceType, int *PriceArr, int PriceArrSize, CarType *TypeList, int TypeListSize);
 template <typename T>
 void SortCar(std::vector<T> &arr);
 template <typename T>

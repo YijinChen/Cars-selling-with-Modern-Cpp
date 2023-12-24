@@ -7,13 +7,12 @@
 #include <chrono>
 #include <thread>
 #include<vector>
-#include <mutex>
 
 using namespace std;
 std::string BrandName;
 int InputType;
 int InputBrand;
-std::mutex mtx2; // for input
+
 
 std::vector<BMW> BMW_HYBRID;
 std::vector<BMW> BMW_GASOLINE;
@@ -33,15 +32,31 @@ std::vector<BMW> BMW_SOLD;
 std::vector<BENZ> BENZ_SOLD;
 std::vector<TESLA> TESLA_SOLD;
 
+bool areAllCharactersNumbers(const std::string& str) {
+    if (str.empty()) {
+        return false;
+    }
+
+    for (std::string::const_iterator it = str.begin(); it != str.end(); ++it) {
+        if (!std::isdigit(static_cast<unsigned char>(*it))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 std::size_t CheckInput(std::string UserInput){
     std::size_t InputNumber = 0;
-    if (UserInput == "stop"){
+    if (UserInput == "quit"){
         cout << endl;
         cout << "Dear customer, thanks for your patronage. Please waiting to quit the application..." << endl;
         stopFlag = true;
     }
     else if (UserInput == "/main"){
         MainInterface();
+    }
+    else if (areAllCharactersNumbers(UserInput) == false){
+        return 0;
     }
     else{
         try {
@@ -67,7 +82,7 @@ std::size_t CheckInput(std::string UserInput){
 template <typename T>
 void FinalConfirm(std::vector<T> &Available, std::size_t TargetNum, std::vector<T> &Repertory, std::vector<T> &Sold){
     if(TargetNum > Available.size()){
-        std::cout << "Error, please input available number!" << endl;
+        std::cout << "Ilegal input, please input available number!" << endl;
         std::cout << endl;
         NumberSelect();
     }
@@ -120,12 +135,18 @@ void BudgetSelect(){
     int IfPrice = 0;
     std::cout << " " << endl;
     std::cout << "Please enter you budget:" << endl;
-    std::string input1;
-    mtx2.lock();
-    std::cin >> input1;
-    mtx2.unlock();
+    std::string input;
+    std::getline(std::cin, input);
+    std::cout << endl;
+    int InputBudget = static_cast<int>(CheckInput(input));
 
-    int InputBudget = static_cast<int>(CheckInput(input1));
+    while (InputBudget == 0){
+        std::cout << "Ilegal input, please enter a positive number." << endl;
+        std::getline(std::cin, input);
+        InputBudget = static_cast<int>(CheckInput(input));
+        std::cout << endl;
+    }
+
     switch(InputBrand){
         case 1:
             switch(InputType){
@@ -209,12 +230,12 @@ template bool CheckTypeRepertory<TESLA>(std::vector<TESLA> &Repertory, CarType t
 
 void NumberSelect(){
     std::cout << "Please enter the car number you want to buy:" << endl;
-    std::string input2;
-    mtx2.lock();
-    std::cin >> input2;
-    mtx2.unlock();
-    std::size_t BuyNum = CheckInput(input2);
+    std::string input;
+    std::getline(std::cin, input);
+    std::size_t BuyNum = CheckInput(input);
     if(BuyNum == 0){
+        std::cout << "Ilegal input, please enter the available number!" << endl;
+        std::cout << endl;
         NumberSelect();
     }
     else{
@@ -262,11 +283,9 @@ void TypeSelect(){
         std::cout << "Unknown brand, please input the legal type." << endl; 
     }
     bool IfType = false;
-    std::string input3;
-    mtx2.lock();
-    std::cin >> input3;
-    mtx2.unlock();
-    InputType = static_cast<int>(CheckInput(input3)); //transfer std::size_t to int
+    std::string input;
+    std::getline(std::cin, input);
+    InputType = static_cast<int>(CheckInput(input)); //transfer std::size_t to int
     //std::cout << "TEST: InputType: " << InputType << endl;
     switch(InputBrand){
         case 1:
@@ -311,14 +330,12 @@ void TypeSelect(){
 }
 
 void BuyInterface(){
-    std::string input4;
     std::cout << " " << endl;
     std::cout << "Dear customer, which car do you prefer? Please input the corresponding number." << endl;
     std::cout << "1.BMW, 2.Mercedes, 3.Tesla" << endl;
-    mtx2.lock();
-    std::cin >> input4;
-    mtx2.unlock();
-    InputBrand = static_cast<int>(CheckInput(input4));
+    std::string input;
+    std::getline(std::cin, input);
+    InputBrand = static_cast<int>(CheckInput(input));
     
     if (InputBrand == 1 or InputBrand == 2 or InputBrand == 3 ){
         TypeSelect();
@@ -338,45 +355,52 @@ void CheckRepertory(){
     SortCar(TESLA_list);
 
     std::cout << endl;
-    std::cout << "Sold out:" << endl;
+    std::cout << "Sold car list:" << endl;
     int counter = 0;
-    PrintInfo(BMW_SOLD, counter);
-    PrintInfo(BENZ_SOLD, counter);
-    PrintInfo(TESLA_SOLD, counter);
+    if (BMW_SOLD.size() + BENZ_SOLD.size() + TESLA_SOLD.size() == 0){
+        std::cout << "No car has been sold." << endl;
+    }
+    else{
+        PrintInfo(BMW_SOLD, counter);
+        PrintInfo(BENZ_SOLD, counter);
+        PrintInfo(TESLA_SOLD, counter);
+    }
     
     std::cout << endl;
-    std::cout << "In store:" << endl;
+    std::cout << "In-store car list:" << endl;
     counter = 0;
-    PrintInfo(BMW_list, counter);
-    PrintInfo(BENZ_list, counter);
-    PrintInfo(TESLA_list, counter);
-
+    if (BMW_list.size() + BENZ_list.size() + TESLA_list.size() == 0){
+        std::cout << "No stored car." << endl;
+    }
+    else{
+        PrintInfo(BMW_list, counter);
+        PrintInfo(BENZ_list, counter);
+        PrintInfo(TESLA_list, counter);
+    }
     std::cout << endl;
     MainInterface();
 }
 
 void MainInterface(){
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::string input5;
     cout << " " << endl;
     std::cout << "Dear customer, what do you want to do? Please choose the corresponding number." << endl;
     std::cout << "1.Buy 2.Check the repertory" << endl;
-    mtx2.lock();
-    std::cin >> input5;
-    mtx2.unlock();
+    std::string input;
+    std::getline(std::cin, input);
 
-    if (input5 == "stop"){
+    if (input == "quit"){
         cout << endl;
         cout << "Dear customer, thanks for your patronage. Please waiting to quit the application..." << endl;
         stopFlag = true;
     }
-    else if (input5 == "/main"){
+    else if (input == "/main"){
         MainInterface();
     }
-    else if (input5 == "1"){
+    else if (input == "1"){
         BuyInterface();
     }
-    else if (input5 == "2"){
+    else if (input == "2"){
         CheckRepertory();
     }
     else{

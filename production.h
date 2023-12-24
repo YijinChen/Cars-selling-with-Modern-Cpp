@@ -15,6 +15,6 @@ extern std::vector<TESLA> TESLA_list;
 template <typename T>
 void AddRepertory(std::vector<T> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int TypeSize, int PriceType, int *PriceArr, int PriceSize);
 void ProduceCars();
-int CheckDiscount();
+void CheckDiscount();
 void setDiscount();
 #endif
