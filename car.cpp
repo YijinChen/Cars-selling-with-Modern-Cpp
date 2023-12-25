@@ -43,8 +43,9 @@ BENZ::BENZ(int id, int salePrice, std::string manu, CarColor color, CarType type
 
 TESLA::TESLA(){}
 TESLA::TESLA(int id, int salePrice, std::string manu, CarColor color, CarType type) 
-    : Car(id, salePrice, manu, color, type), isDiscount(true) {
+    : Car(id, salePrice, manu, color, type), isDiscount(false) {
     if(type != ELECTRIC){
         cout << "TESLA only produces cars with type ELECTRIC" << endl;
     }
+    //isDiscount = false;
 }
