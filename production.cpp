@@ -19,31 +19,34 @@ std::vector<BMW> BMW_list;
 std::vector<BENZ> BENZ_list;
 std::vector<TESLA> TESLA_list;
 std::vector<size_t> TESLA_undiscounted_num;
-std::mutex mtx1; // for lock shared variables "TESLA_list" between different Threads
+std::mutex mtx1; // for lock shared lists between different Threads
 
 
 
 template <typename T>
-void AddRepertory(std::vector<T> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int TypeSize, int PriceType, int *PriceArr, int PriceSize){
+void AddRepertory(std::vector<T> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int TypeSize, int *PriceArr, int PriceSize){
     std::vector<T> newlist(UpSize);
-    GenerateCars(manu, newlist, PriceType, PriceArr, PriceSize, TypeArr, TypeSize);
+    GenerateCars(manu, newlist, PriceArr, PriceSize, TypeArr, TypeSize);
     Repertory.insert(Repertory.end(), newlist.begin(), newlist.end());
 }
-template void AddRepertory<BMW>(std::vector<BMW> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int typesize, int PriceType, int *PriceArr, int PriceSize);
-template void AddRepertory<BENZ>(std::vector<BENZ> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int typesize, int PriceType, int *PriceArr, int PriceSize);
-template void AddRepertory<TESLA>(std::vector<TESLA> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int typesize, int PriceType, int *PriceArr, int PriceSize);
+template void AddRepertory<BMW>(std::vector<BMW> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int typesize, int *PriceArr, int PriceSize);
+template void AddRepertory<BENZ>(std::vector<BENZ> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int typesize, int *PriceArr, int PriceSize);
+template void AddRepertory<TESLA>(std::vector<TESLA> &Repertory, std::size_t UpSize, std::string manu, CarType *TypeArr, int typesize, int *PriceArr, int PriceSize);
 
 void ProduceCars(){
     int BMWprice[] = {40000, 50000, 100000};
     int BENZprice[] = {30000, 60000, 80000};
-    int TESLAprice[] = {40000, 60000};
+    int TESLAprice[20000];
+    for (int i = 0; i <= 20000; i++){
+        TESLAprice[i] = i + 40000;
+    }
 
     int i = 1;
     while (!stopFlag && i <= MaxRounds){
-        AddRepertory(BMW_list, BMW_num, "BMW", BMWtype, 2, 1, BMWprice, 3);
-        AddRepertory(BENZ_list, BENZ_num, "BENZ", BENZtype, 3, 1, BENZprice, 3);
         mtx1.lock();
-        AddRepertory(TESLA_list, TESLA_num, "TESLA", TESLAtype, 1, 0, TESLAprice, 2);
+        AddRepertory(BMW_list, BMW_num, "BMW", BMWtype, 2, BMWprice, 3);
+        AddRepertory(BENZ_list, BENZ_num, "BENZ", BENZtype, 3, BENZprice, 3);
+        AddRepertory(TESLA_list, TESLA_num, "TESLA", TESLAtype, 1, TESLAprice, 20000);
         mtx1.unlock();
         i++;
         std::this_thread::sleep_for(std::chrono::seconds(30)); // Produce new cars per 30 seconds.
@@ -61,7 +64,7 @@ void ProduceCars(){
     }
 }
 
-void CheckDiscount(){
+void tryAddUndiscountedTeslaCarsSum(){
     TESLA_undiscounted_num.clear();
     mtx1.lock();
     for (size_t i = 0; i < TESLA_list.size(); i++){
@@ -74,8 +77,7 @@ void CheckDiscount(){
 
 void setDiscount(){
     while (!stopFlag){
-        CheckDiscount();
-
+        tryAddUndiscountedTeslaCarsSum();
         if(TESLA_undiscounted_num.size() > 3){
             cout << endl;
             cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
