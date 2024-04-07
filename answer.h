@@ -5,12 +5,10 @@ using namespace std;
 
 class Answer{
     public:
-    bool IfValid;
-    bool IfMain;
-    bool IfQuit;
-    int InputNumber;
-    Answer();
-    Answer(bool ifvalid, bool ifmain, bool ifquit, int inputnumber);
+    bool ifValid{false};
+    bool ifMain{false};
+    bool ifQuit{false};
+    int inputNumber{0};
 };
 
 Answer askQuestionAndGetAnswer(std::string question, int validInputRange, std::string errorMessage);

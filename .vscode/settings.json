@@ -101,10 +101,8 @@
     "memory": "cpp",
     "mutex": "cpp",
     "new": "cpp",
-    "numeric": "cpp",
     "optional": "cpp",
     "ostream": "cpp",
-    "random": "cpp",
     "ratio": "cpp",
     "sstream": "cpp",
     "stdexcept": "cpp",
@@ -119,10 +117,15 @@
     "variant": "cpp",
     "vector": "cpp",
     "algorithm": "cpp",
-    "thread": "cpp",
+    "numeric": "cpp",
+    "random": "cpp",
+    "__tree": "cpp",
+    "map": "cpp",
+    "unordered_set": "cpp",
     "deque": "cpp",
     "fstream": "cpp",
     "iomanip": "cpp",
+    "set": "cpp",
     "stack": "cpp"
   }
 }

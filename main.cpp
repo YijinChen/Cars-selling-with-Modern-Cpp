@@ -1,26 +1,26 @@
 #include "car.h"
-#include "carfunctions.h"
-#include "production.h"
-#include "interaction.h"
-#include <random>
-#include <iostream>
-#include <cstdlib>
-#include <atomic>
-#include <thread>
+#include "factory.h"
+#include "userinput.h"
+#include "userinteraction.h"
 #include <vector>
-using namespace std;
+#include <iostream>
+#include <fstream>
+#include <thread>
 
+int main(){
+    std::ofstream ofile("SoldRecord.txt", std::ios::out);
+    ofile.close();
+    std::cout << "✧✧✧✧✧✧✧✧✧✧✧✧✧✧✧   Dear dear customer! welcome to Yijin's virtual car trade center!   ✧✧✧✧✧✧✧✧✧✧✧✧✧✧✧\n";
+    std::cout << "✧ You can choose and purchase a car with specific brand, type and color from our factory repertory.\n";
+    std::cout << "✧ In order to make more $profit$. [Pink], [Gold] and [White] colors are only available for [customizing] | ᴥ•́ )✧\n";
 
-int main(){   
-    cout << "Dear customer, welcome to the virtual car trade center!" << endl;
-    cout << "You can always enter 'quit' to quit the application and enter '/main' to return the main menu." << endl;
-    std::thread worker1(ProduceCars);
-    std::thread worker2(setDiscount);
-    std::thread worker3(MainInterface);
-    
+    std::cout << "✧ You can always enter 'quit' to [quit] the application and enter '/main' to [return the main menu]. \n";
+    std::thread worker1(CarProduction);
+    std::thread worker2(MainInterface);
+    std::thread worker3(TELASDiscount);
     worker1.join();
     worker2.join();
     worker3.join();
-    cout << endl;
-    cout << "You have successfully quit the application." << endl;
+
+    std::cout << "\nYou have successfully quit the application.\n";
 }
