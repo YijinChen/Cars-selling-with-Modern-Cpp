@@ -1,12 +1,11 @@
 #include"answer.h"
-#include"production.h"
+#include"factory.h"
 #include<iostream>
 
 bool areAllCharactersNumbers(const std::string& str) {
     if (str.empty()) {
         return false;
     }
-
     for (std::string::const_iterator it = str.begin(); it != str.end(); ++it) {
         if (!std::isdigit(static_cast<unsigned char>(*it))) {
             return false;
@@ -15,42 +14,36 @@ bool areAllCharactersNumbers(const std::string& str) {
     return true;
 }
 
-Answer::Answer(){
-    IfValid = false;
-    IfMain = false;
-    IfQuit = false;
-    InputNumber = -1;
-}
-
 Answer askQuestionAndGetAnswer(std::string question, int validInputRange, std::string errorMessage){
-    Answer UserInput = Answer();
-    while (UserInput.IfValid == false){
+    Answer userAnswer;
+    std::string input;
+    std::string quitReminder = "\nDear customer, thanks for your patronage. Please waiting to quit the application...\n";
+    
+    //Ask user until get the valid answer
+    while (userAnswer.ifValid == false){
+        //Ask user the given question and get an answer
         std::cout << question << endl;
-        std::string input;
         std::getline(std::cin, input);
+        //Check the answer
         if (input == "quit"){
-            cout << endl;
-            cout << "Dear customer, thanks for your patronage. Please waiting to quit the application..." << endl;
+            std::cout << quitReminder;
             stopFlag = true;
-            UserInput.IfQuit = true;
-            UserInput.IfValid = true;
+            userAnswer.ifQuit = true;
+            userAnswer.ifValid = true;
         }
         else if (input == "/main"){
-            UserInput.IfMain = true;
-            UserInput.IfValid = true;
+            userAnswer.ifMain = true;
+            userAnswer.ifValid = true;
         }
         else if (areAllCharactersNumbers(input) == true){
-            UserInput.InputNumber = std::stoi(input);
-            if(0 < UserInput.InputNumber && UserInput.InputNumber <= validInputRange){
-                UserInput.IfValid = true;
-            }
-            else{
-                cout << errorMessage << endl;
+            userAnswer.inputNumber = std::stoi(input);
+            if(0 < userAnswer.inputNumber && userAnswer.inputNumber <= validInputRange){
+                userAnswer.ifValid = true;
             }
         }
         else{
-            cout << errorMessage << endl;
+            std::cout << errorMessage << "\n";
         }
     }
-    return UserInput;
+    return userAnswer;
 }
