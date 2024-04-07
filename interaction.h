@@ -15,5 +15,6 @@ void ChooseBrand();
 void ChooseCarType();
 int InputBudget();
 void ChooseNumerOfCar(int AvailableNum);
+extern std::string FileName;
 
 #endif

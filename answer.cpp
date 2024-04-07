@@ -1,5 +1,7 @@
 #include"answer.h"
 #include"production.h"
+#include "writefile.h"
+#include "interaction.h"
 #include<iostream>
 
 bool areAllCharactersNumbers(const std::string& str) {
@@ -26,11 +28,14 @@ Answer askQuestionAndGetAnswer(std::string question, int validInputRange, std::s
     Answer UserInput = Answer();
     while (UserInput.IfValid == false){
         std::cout << question << endl;
+        WriteToFile(FileName, question);
         std::string input;
         std::getline(std::cin, input);
+        WriteToFile(FileName,"\n"+ input);
+        std::string QuitAnswer = "\nDear customer, thanks for your patronage. Please waiting to quit the application...\n";
         if (input == "quit"){
-            cout << endl;
-            cout << "Dear customer, thanks for your patronage. Please waiting to quit the application..." << endl;
+            cout << QuitAnswer;
+            WriteToFile(FileName, QuitAnswer);
             stopFlag = true;
             UserInput.IfQuit = true;
             UserInput.IfValid = true;
@@ -46,10 +51,12 @@ Answer askQuestionAndGetAnswer(std::string question, int validInputRange, std::s
             }
             else{
                 cout << errorMessage << endl;
+                WriteToFile(FileName, errorMessage);
             }
         }
         else{
             cout << errorMessage << endl;
+            WriteToFile(FileName, errorMessage);
         }
     }
     return UserInput;

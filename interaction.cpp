@@ -9,6 +9,7 @@
 #include <thread>
 #include<vector>
 #include <mutex>
+#include <fstream>
 
 using namespace std;
 std::string BrandName[] = {"BMW","BENZ","TESLA"};
@@ -35,20 +36,22 @@ std::vector<BMW> BMW_SOLD;
 std::vector<BENZ> BENZ_SOLD;
 std::vector<TESLA> TESLA_SOLD;
 
+std::string FileName = "CarsSelling.txt";
+std::ofstream fileStream(FileName);
+
 template <typename T>
 void ProcessOrder(std::vector<T> &Available, std::size_t TargetNum, std::vector<T> &Repertory, std::vector<T> &Sold){
     int id = Available[TargetNum - 1].ID;
     std::size_t i = 0;
+    std::string CarInfo;
+    std::string CongratInfo;
     while(i < Repertory.size() && Repertory[i].ID != id){
         i++;
     }
-    std::cout << endl;
-    std::cout << Repertory[i].manu << " car: " << TypeToString(Repertory[i].type) << " " << ColorToString(Repertory[i].color) << " " << Repertory[i].salePrice <<"€ Sold!" << endl;
-    std::cout << endl;
-    std::cout << "*********************************************************************************" << endl;
-    std::cout << "Congratulations! You've already purchased a super cool new car from our factory!!" << endl;
-    std::cout << "*********************************************************************************" << endl;
-    
+    CarInfo = "\n" + Repertory[i].manu + " car: " + TypeToString(Repertory[i].type) + " " + ColorToString(Repertory[i].color) + " " + std::to_string(Repertory[i].salePrice) + "€ Sold!" + "\n";
+    std::cout << CarInfo;
+    CongratInfo = "*********************************************************************************\nCongratulations! You've already purchased a super cool new car from our factory!!\n*********************************************************************************\n";
+    std::cout << CongratInfo;
     Sold.push_back(Repertory[i]);
     Repertory.erase(Repertory.begin() + static_cast<std::ptrdiff_t>(i));
     return;
@@ -79,9 +82,9 @@ template int CheckPriceRepertory<TESLA>(std::vector<TESLA> &TypeRepe, int Budget
 int InputBudget(){
     int AvailableBudgetNum = 0;
     while (AvailableBudgetNum == 0){
-        std::string Question = "\nPlease enter you budget:";
-        std::string ErrorMessage = "Ilegal input, please enter a positive number.";
-        Answer UserAnswer = askQuestionAndGetAnswer(Question, 10000000,ErrorMessage);
+        std::string Question = "\nPlease enter you budget (1-10000000€):";
+        std::string ErrorMessage = "Ilegal input, please enter a budget between 1 to 10000000.";
+        Answer UserAnswer = askQuestionAndGetAnswer(Question,10000000,ErrorMessage);
         if (UserAnswer.IfQuit == true or UserAnswer.IfMain == true){
             return -1;
         }
@@ -105,15 +108,14 @@ int InputBudget(){
             case 3: 
                 switch(InputType){
                     case 1: AvailableBudgetNum = CheckPriceRepertory(TESLA_ELECTRIC,InputBudget,TESLA_Eavailable); break;
-                    default: std::cout << "Illegal BENZ type." << endl;
+                    default: std::cout << "Illegal TESLA type." << endl;
                 }
                 break;
             default: std::cout << "Unknown Brand, cannot offer the types." << endl;
         }
         if (AvailableBudgetNum == 0){
-            std::cout << endl;
-            std::cout << "What a pity! Your budget " << InputBudget << "€ is too litte to buy a brand new " << BrandName << " car. " << endl;
-            std::cout << "You can increase your budget or enter '/main' to return back to the main menu" << endl;
+            std::string LowBudgetInfo = "\nWhat a pity! Your budget " + std::to_string(InputBudget) + "€ is not enough to buy a brand new " + BrandName[InputBrand-1] + " car.\nYou can increase your budget or enter '/main' to return back to the main menu";
+            std::cout << LowBudgetInfo;
         }
     }
     int output_counter = 0;
@@ -136,7 +138,7 @@ int InputBudget(){
         case 3: 
             switch(InputType){
                 case 1: PrintInfo(TESLA_Eavailable,output_counter); break;
-                default: std::cout << "Illegal BENZ type." << endl;
+                default: std::cout << "Illegal TESLA type." << endl;
             }
             break;
         default: std::cout << "Unknown Brand, cannot offer the types." << endl;
@@ -187,7 +189,7 @@ void ChooseNumerOfCar(int AvailableNum){
         case 3: 
             switch(InputType){
                 case 1: ProcessOrder(TESLA_Eavailable,BuyNum,TESLA_list,TESLA_SOLD); break;
-                default: std::cout << "Illegal BENZ type." << endl;
+                default: std::cout << "Illegal TESLA type." << endl;
             }
             break;
         default: std::cout << "Unknown Brand, cannot offer the types." << endl;
@@ -231,7 +233,7 @@ void ChooseCarType(){
             default: std::cout << "Unknown Brand, cannot offer the types." << endl;
         }
         if (AvailableCarNum == 0){
-            std::cout << "There is no repertory of the selected type " << BrandName << " car, please choose another type or enter '/main' to return back to the main menu" << endl;
+            std::cout << "There is no repertory of the selected type " << BrandName[InputBrand-1] << " car, please choose another type or enter '/main' to return back to the main menu" << endl;
         } 
     }
     mtx1.lock();
@@ -245,7 +247,7 @@ void ChooseCarType(){
 }
 
 void ChooseBrand(){
-    Answer UserAnswer = askQuestionAndGetAnswer("\nDear customer, which car do you prefer? Please input the corresponding number.\n1.BMW, 2.Mercedes, 3.Tesla",3,"Error, please enter a valid input '1', '2' or '3'.");
+    Answer UserAnswer = askQuestionAndGetAnswer("\nDear customer, which car do you prefer? Please input the corresponding number.\n1.BMW, 2.BENZ, 3.Tesla",3,"Error, please enter a valid input '1', '2' or '3'.");
     InputBrand = UserAnswer.InputNumber;
     if (UserAnswer.IfQuit == true or UserAnswer.IfMain == true){
         return;
@@ -262,23 +264,20 @@ void PrintRepertory(){
     SortCar(BENZ_list);
     SortCar(TESLA_list);
 
-    std::cout << endl;
-    std::cout << "Sold car list:" << endl;
+    std::cout << "\nSold car list:\n";
     int counter = 0;
     if (BMW_SOLD.size() + BENZ_SOLD.size() + TESLA_SOLD.size() == 0){
-        std::cout << "No car has been sold." << endl;
+        std::cout << "No car has been sold.\n";
     }
     else{
         PrintInfo(BMW_SOLD, counter);
         PrintInfo(BENZ_SOLD, counter);
         PrintInfo(TESLA_SOLD, counter);
     }
-    
-    std::cout << endl;
-    std::cout << "In-store car list:" << endl;
+    std::cout << "\nIn-store car list:\n";
     counter = 0;
     if (BMW_list.size() + BENZ_list.size() + TESLA_list.size() == 0){
-        std::cout << "No stored car." << endl;
+        std::cout << "No stored car.\n";
     }
     else{
         PrintInfo(BMW_list, counter);
@@ -297,6 +296,7 @@ void MainInterface(){
         std::this_thread::sleep_for(std::chrono::seconds(1));
         std::string Question = "\nDear customer, what do you want to do? Please choose the corresponding number.\n1.Buy 2.Check the repertory";
         std::string ErrorMessage = "Error, please enter a valid input '1' or '2'.";
+        //WriteToFile(FileName,Question);
         Answer UserAnswer = askQuestionAndGetAnswer(Question, 2, ErrorMessage);
         if (UserAnswer.IfMain == true){
             continue;

@@ -49,7 +49,13 @@ void ProduceCars(){
         AddRepertory(TESLA_list, TESLA_num, "TESLA", TESLAtype, 1, TESLAprice, 20000);
         mtx1.unlock();
         i++;
-        std::this_thread::sleep_for(std::chrono::seconds(30)); // Produce new cars per 30 seconds.
+
+        // Produce new cars per 30 seconds.
+        int sleeptime = 0;
+        while(!stopFlag && sleeptime < 30){
+            std::this_thread::sleep_for(std::chrono::seconds(5)); 
+            sleeptime += 5;
+        }
     }
     if (!stopFlag){
         cout << endl;
@@ -103,6 +109,12 @@ void setDiscount(){
         //else{
         //     cout << "TESLA cannot set more discount in case of bankruptcy." << endl;
         // }
-        std::this_thread::sleep_for(std::chrono::seconds(120)); // Check and set discount per 2 minutes.
+
+        // Check and set discount per 2 minutes.
+        int sleeptime = 0;
+        while(!stopFlag && sleeptime < 120){
+            std::this_thread::sleep_for(std::chrono::seconds(5)); 
+            sleeptime += 5;
+        }
     }
 }

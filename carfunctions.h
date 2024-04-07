@@ -3,6 +3,7 @@
 #include "car.h"
 #include<iostream>
 
+extern int id_counter;
 std::string TypeToString(CarType t);
 std::string ColorToString(CarColor c);
 int Ran_Gen(int a, int b);

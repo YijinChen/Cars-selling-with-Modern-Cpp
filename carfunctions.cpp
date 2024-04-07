@@ -1,6 +1,10 @@
 #include "car.h"
 #include "carfunctions.h"
+#include "writefile.h"
+#include "interaction.h"
 #include <random>
+#include <string>
+using namespace std;
 
 int id_counter = 0;
 //int output_counter = 0;
@@ -31,8 +35,8 @@ int Ran_Gen(int a, int b){
     int random_number = distrib(gen);
     return random_number;
 }
-template <typename T>
 
+template <typename T>
 void GenerateCars(std::string ManuName, std::vector<T> &arr, int *PriceArr, int PriceArrSize, CarType *TypeList, int TypeListSize){
     for (size_t i = 0; i < arr.size(); i++)
     {
@@ -69,10 +73,13 @@ template void SortCar<TESLA>(std::vector<TESLA> &arr);
 template <typename T>
 void PrintInfo(std::vector<T> arr, int &output_counter){
     typename std::vector<T>::const_iterator it;
+    std::string CarInfo;
     for (it = arr.begin(); it != arr.end(); ++it){
         const T& item = *it;
         output_counter++;
+        CarInfo =  std::to_string(output_counter) + ". " + item.manu + " car(id: " + std::to_string(item.ID) + "): " + TypeToString(item.type) + ", " + ColorToString(item.color) + ", " + std::to_string(item.salePrice) + "€\n";
         cout << output_counter << ". " << item.manu <<" car(id: "<< item.ID << "): "<< TypeToString(item.type) << ", " << ColorToString(item.color) << ", " << item.salePrice << "€" << endl;
+        WriteToFile(FileName,CarInfo);
     }
 }
 template void PrintInfo<BMW>(std::vector<BMW> arr, int &output_counter);

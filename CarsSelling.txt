@@ -1,0 +1,5 @@
+
+Dear customer, what do you want to do? Please choose the corresponding number.
+1.Buy 2.Check the repertory
+quit
+Dear customer, thanks for your patronage. Please waiting to quit the application...
